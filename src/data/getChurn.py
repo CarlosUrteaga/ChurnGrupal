@@ -8,24 +8,24 @@ sys.path.append('../')
 from time_functions import *
 
 # Read Files
-df1 = pd.read_csv('renovar/2017-01-01-s.csv')
-df2 = pd.read_csv('renovar/2017-01-02-s.csv')
-df3 = pd.read_csv('renovar/2017-02-01-s.csv')
-df4 = pd.read_csv('renovar/2017-02-02-s.csv')
-df5 = pd.read_csv('renovar/201801-s.csv')
-df6 = pd.read_csv('renovar/201802-s.csv')
-df7 = pd.read_csv('renovar/201803-s.csv')
-df8 = pd.read_csv('renovar/201804-s.csv')
-df9 = pd.read_csv('renovar/201805-s.csv')
-dfA = pd.read_csv('renovar/201806-s.csv')
-dfB = pd.read_csv('renovar/201807-s.csv')
-dfC = pd.read_csv('renovar/201808-s.csv')
-dfD = pd.read_csv('renovar/201809-s.csv')
-dfE = pd.read_csv('renovar/201810-s.csv')
-dfF = pd.read_csv('renovar/201811-s.csv')
-dfG = pd.read_csv('renovar/201812-s.csv')
-dfH = pd.read_csv('renovar/201901-s.csv')
-dfI = pd.read_csv('renovar/201902-s.csv')
+df1 = pd.read_csv('padres/2017-01-01-s.csv')
+df2 = pd.read_csv('padres/2017-01-02-s.csv')
+df3 = pd.read_csv('padres/2017-02-01-s.csv')
+df4 = pd.read_csv('padres/2017-02-02-s.csv')
+df5 = pd.read_csv('padres/201801-s.csv')
+df6 = pd.read_csv('padres/201802-s.csv')
+df7 = pd.read_csv('padres/201803-s.csv')
+df8 = pd.read_csv('padres/201804-s.csv')
+df9 = pd.read_csv('padres/201805-s.csv')
+dfA = pd.read_csv('padres/201806-s.csv')
+dfB = pd.read_csv('padres/201807-s.csv')
+dfC = pd.read_csv('padres/201808-s.csv')
+dfD = pd.read_csv('padres/201809-s.csv')
+dfE = pd.read_csv('padres/201810-s.csv')
+dfF = pd.read_csv('padres/201811-s.csv')
+dfG = pd.read_csv('padres/201812-s.csv')
+dfH = pd.read_csv('padres/201901-s.csv')
+dfI = pd.read_csv('padres/201902-s.csv')
 
 # Append dataframes
 df1 = df1.append(df2)
@@ -90,32 +90,54 @@ m = ['2017-01-31 00:00:00.000',
 for each in m:
     str_time= each 
     datetimeObj = datetime.strptime(str_time, '%Y-%m-%d %H:%M:%S.%f')
-    month_first_day = datetime(get_previous_year(datetimeObj.year,  datetimeObj.month)
-                                    ,  get_previous_month(datetimeObj.month)
-                                    , 1)
+    # StrTimeFirst day
+    str_time_first_day = datetime(datetimeObj.year
+                                        , datetimeObj.month
+                                        , 1)
+    # Mes Fin Credito 1ro
     next_two_month_first_day = datetime(get_next_year(get_next_year(datetimeObj.year, datetimeObj.month), get_next_month(datetimeObj.month))
                                         , get_next_month(get_next_month(datetimeObj.month))
                                         , 1)
-    next_two_month_last_day = datetime(
-                                        get_next_year(get_next_year(  get_next_year(datetimeObj.year, datetimeObj.month), get_next_month(datetimeObj.month)),get_next_month(get_next_month(datetimeObj.month)))
-                                        , get_next_month(get_next_month(get_next_month(datetimeObj.month)))
-                                        , get_last_day(get_next_month(get_next_month(get_next_month(datetimeObj.month)))))
-    str_time2 = datetime.strptime(str(next_two_month_last_day)+'.000', '%Y-%m-%d %H:%M:%S.%f')
+    # Mes Fin Credito last
+    next_two_month_last_day = datetime(next_two_month_first_day.year,
+                                        next_two_month_first_day.month
+                                        , get_last_day(next_two_month_first_day.month)
+                                        )
+    # Desembolso  Inicial
+    # month_first_day_end_credit = df1.FechaDesembolsoA # Debe de ser mayor
+    # Fecha Fin Desembolso 
+    next_three_month_last_day = datetime(get_next_year(next_two_month_last_day.year,next_two_month_last_day.month),
+                                        get_next_month(next_two_month_last_day.month)
+                                        , get_last_day(get_next_month(next_two_month_last_day.month))
+                                        )
+    # datetimeObj.strftime('%Y-%m-%d')
+    # next_two_month_first_day.strftime('%Y-%m-%d')
+    # next_two_month_last_day.strftime('%Y-%m-%d')
+    # next_three_month_last_day.strftime('%Y-%m-%d')
+    # print("fechaOperacionI,\tFinCreditoI,FinCreditoF,fechaOperacionF\t,FechaDesembolsoI,FechaDesembolsoF")
+    # print(str_time\
+    #     , next_two_month_first_day.strftime('%Y-%m-%d')\
+    #     , next_two_month_last_day.strftime('%Y-%m-%d') \
+    #     ,str_time2
+    #     , str_time_first_day.strftime('%Y-%m-%d') \
+    #     , next_three_month_last_day.strftime('%Y-%m-%d')
+    #     )
+    str_time2 = datetime.strptime(str(next_three_month_last_day)+'.000', '%Y-%m-%d %H:%M:%S.%f')
     previous_month_first_day = datetime(get_previous_year(str_time2.year, str_time2.month), get_previous_month(str_time2.month), 1)
     # last_day_current_date  = datetime(str_time2.year, str_time2.month, get_last_day(str_time2.month))
     
     # Desembolso
-    dfT = df1.loc[ ((df1.fechaOperacion==str(next_two_month_last_day)+'.000') 
-                    & ( df1.FechaDesembolsoA >= month_first_day.strftime('%Y-%m-%d')) 
-                    & ( df1.FechaDesembolsoA < next_two_month_last_day.strftime('%Y-%m-%d')))    
+    dfT = df1.loc[ ((df1.fechaOperacion==str(str_time2)+'.000') 
+                    & ( df1.FechaDesembolsoA >= str_time_first_day.strftime('%Y-%m-%d')) 
+                    & ( df1.FechaDesembolsoA < next_three_month_last_day.strftime('%Y-%m-%d')))    
                   ,['Contract_Id','IdPersona','producto', 'FechaDesembolsoA']]
     # print(len(dfT))
     dfT.columns = ['New_Contract_Id', 'IdPersona','New_producto', 'New_FechaDesembolsoA']
 
     # Fin Credito
     dfT2 = pd.merge(df1.loc[((df1.fechaOperacion==str_time) 
-                             & ( df1.FechaFinCreditoA > datetimeObj.strftime('%Y-%m-%d')) 
-                             & ( df1.FechaFinCreditoA < next_two_month_first_day.strftime('%Y-%m-%d'))) 
+                             & ( df1.FechaFinCreditoA > next_two_month_first_day.strftime('%Y-%m-%d')) 
+                             & ( df1.FechaFinCreditoA <=next_two_month_last_day.strftime('%Y-%m-%d'))) 
                            ], 
                     dfT, on='IdPersona',how='left')         
 
@@ -128,14 +150,15 @@ for each in m:
     dfT2.DiasDesembolso = dfT2['DiasDesembolso'].astype('timedelta64[D]')
     
     if i == 0:
-        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190813.csv",index=False)
+        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190814.csv",index=False)
         i=1
     else:
-        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190813.csv",index=False, mode='a', header=False)
+        1
+        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190814.csv",index=False, mode='a', header=False)
     print(dfT2.groupby(['fechaOperacion','Churn'])['fechaOperacion'].count())
     print(len(dfT2) - len(df1.loc[((df1.fechaOperacion==str_time) 
-                             & ( df1.FechaFinCreditoA > datetimeObj.strftime('%Y-%m-%d')) 
-                             & ( df1.FechaFinCreditoA < next_two_month_first_day.strftime('%Y-%m-%d'))) 
+                             & ( df1.FechaFinCreditoA > next_two_month_first_day.strftime('%Y-%m-%d')) 
+                             & ( df1.FechaFinCreditoA < next_two_month_last_day.strftime('%Y-%m-%d'))) 
                            ]))
     print(len(dfT2))
 
@@ -182,10 +205,11 @@ for each in m:
     dfT2.DiasDesembolso = dfT2['DiasDesembolso'].astype('timedelta64[D]')
     
     if i == 0:
-        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190813.csv",index=False)
+        # dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190813.csv",index=False)
         i=1
     else:
-        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190813.csv",index=False, mode='a', header=False)
+        1
+        dfT2[['fechaOperacion','Contract_Id','IdPersona', 'producto','Churn', 'DiasDesembolso']].to_csv("ChurnTest20190814.csv",index=False, mode='a', header=False)
     print(dfT2.groupby(['fechaOperacion','Churn'])['fechaOperacion'].count())
     print(len(dfT2) - len(df1.loc[((df1.fechaOperacion==str_time) 
                              & ( df1.FechaFinCreditoA > datetimeObj.strftime('%Y-%m-%d')) 
